@@ -1,0 +1,29 @@
+/**
+ * WHAT IS THIS FILE?
+ *
+ * Globally applied styles. No matter which components are in the page or matching route,
+ * the styles in here will be applied to the Document, without any sort of CSS scoping.
+ *
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #e5e5f7;
+  opacity: 1;
+  backdrop-filter: blur(1);
+  background-image: radial-gradient(circle at center center, #4a3f89, #e5e5f7), repeating-radial-gradient(circle at center center, #4a3f89, #4a3f89, 32px, transparent 64px, transparent 32px);
+  background-blend-mode: multiply;
+  height: 100vh;
+  width: 100vw;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+}
+
+.content {
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(40px);
+}

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "cuty.ink",
+  "short_name": "cuty.ink",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Let's shorten and make your link look better!"
+}
