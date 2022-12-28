@@ -60,7 +60,7 @@ export const questions: question[] = [
       'Create your own short link. You may use _ or -.\nE.g "awesome_link" would be https://cuty.ink/awesome_link.',
   },
   {
-    promp: 'This is how your link is going to look like.'
+    promp: 'This is how your link is going to look like.\nIt may differ a little bit depends on the user browser/night-mode/font size.'
   }
 ];
 
@@ -68,9 +68,9 @@ export const globalData = createContext("global-data");
 
 export default component$(() => {
   const store = useStore({
-    currentPage: 4,
+    currentPage: 0,
     data: {},
-    currentQuestion: questions[4],
+    currentQuestion: questions[0],
   });
   useTask$(({ track }) => {
     const currentPage = track(() => store.currentPage);
@@ -103,21 +103,30 @@ export default component$(() => {
             >
                forward →
             </span>
-          )}</span>
+          )}
+          {store.currentPage === 5 && (
+            <span
+              onClick$={() => {}}
+              class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
+            >
+               generate →
+            </span>
+          )}
+          </span>
         </h1>
-        {/* <Forms /> */}
-        <Preview />
+        {store.currentPage < 5 && <Forms />}
+        {store.currentPage === 5 && <Preview />}
       </div>
     </div>
   );
 });
 
 export const head: DocumentHead = {
-  title: "Welcome to Qwik",
+  title: "Cuty.ink: Beautify your link.",
   meta: [
     {
       name: "description",
-      content: "Qwik site description",
+      content: "Cuty.ink: Let's shorten and make your link look good!",
     },
   ],
 };

@@ -45,7 +45,7 @@ export default component$(() => {
   ];
   return (
     <div class="w-full flex items-center justify-center gap-4 flex-col">
-      <span class="text-base lg:text-lg">
+      <span class="text-base lg:text-2xl">
         {store.currentSocialMedia > 0 && (
           <span
             class="cursor-pointer"
