@@ -48,6 +48,7 @@ export default component$(() => {
       <span class="text-base lg:text-lg">
         {store.currentSocialMedia > 0 && (
           <span
+            class="cursor-pointer"
             onClick$={() => {
               store.currentSocialMedia -= 1;
             }}
@@ -56,8 +57,9 @@ export default component$(() => {
           </span>
         )}
         <span>{socialMedias[store.currentSocialMedia].name}</span>
-        {store.currentSocialMedia < 2 && (
+        {store.currentSocialMedia < socialMedias.length - 1 && (
           <span
+            class="cursor-pointer"
             onClick$={() => {
               store.currentSocialMedia += 1;
             }}

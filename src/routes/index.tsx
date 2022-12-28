@@ -40,7 +40,7 @@ export const questions: question[] = [
     placeholder: "Let's make your link shorter and looks better!",
     label: "Description",
     promp:
-      "A brief explanation about the link or website. Keep it less than 3 sentences. It will get truncates.",
+      "A brief explanation about the link or website. Keep it less than 3 sentences. It will get truncated.",
   },
   {
     type: "url",
@@ -57,7 +57,7 @@ export const questions: question[] = [
     placeholder: "awesome_link",
     label: "Short Link",
     promp:
-      'Create your own short link. You may use _ or -.\nE.g "awesome_link" would be https://cuty.ink/awesome_link',
+      'Create your own short link. You may use _ or -.\nE.g "awesome_link" would be https://cuty.ink/awesome_link.',
   },
   {
     promp: 'This is how your link is going to look like.'
@@ -84,12 +84,11 @@ export default component$(() => {
   ));
   useContextProvider(globalData, store);
   return (
-    <div class="content flex items-center justify-center grow shrink">
+    <div class="flex items-center justify-center grow shrink">
       <div class="lg:w-1/3 px-2 flex items-center justify-center flex-col">
-        <h2 class="text-base lg:text-3xl text-center mb-20">Cuty.ink</h2>
         <h1 class="text-lg lg:text-5xl font-medium mb-10">
           {renderPromp}
-          {store.currentPage > 0 && (
+          <span class="flex justify-between">{store.currentPage > 0 && (
             <span
               onClick$={() => (store.currentPage -= 1)}
               class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
@@ -97,6 +96,14 @@ export default component$(() => {
               ← back
             </span>
           )}
+          {store.currentPage < 5 && (
+            <span
+              onClick$={() => (store.currentPage += 1)}
+              class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
+            >
+               forward →
+            </span>
+          )}</span>
         </h1>
         {/* <Forms /> */}
         <Preview />
