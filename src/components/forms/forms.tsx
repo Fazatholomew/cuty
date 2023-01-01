@@ -1,4 +1,4 @@
-import { component$, useContext, useStore } from "@builder.io/qwik";
+import { component$, QRL, useContext, useStore } from "@builder.io/qwik";
 import { globalData } from "../../routes";
 interface formsProps {
   type: string;
@@ -7,7 +7,7 @@ interface formsProps {
   label: string;
 }
 
-export default component$(() => {
+export default component$(({nextQuestion}: {nextQuestion: QRL<() => void>}) => {
   const globalStore: any = useContext(globalData);
   const store = useStore({ currentValue: "" });
   // @ts-ignore
@@ -25,12 +25,12 @@ export default component$(() => {
           // @ts-ignore
           globalStore.data[name] = store.currentValue;
           // @ts-ignore
-          globalStore.currentPage += 1;
           store.currentValue = "";
+          nextQuestion();
         }}
-        value={store.currentValue}
+        value={globalStore.data[name]}
         onInput$={(e) => {
-          store.currentValue = (e.target as HTMLInputElement).value;
+          globalStore.data[name] = (e.target as HTMLInputElement).value;
         }}
       />
       <label class="absolute translate-y-6 scale-75 transform text-sm lg:text-2xl text-gray-300 duration-300 peer-placeholder-shown:translate-y-0 peer-focus:text-yellow-300 peer-focus:dark:text-yellow-200">

@@ -1,13 +1,15 @@
 import {
+  $,
   component$,
   createContext,
   useContextProvider,
   useStore,
   useTask$,
 } from "@builder.io/qwik";
-import type { DocumentHead } from "@builder.io/qwik-city";
+import { DocumentHead, useNavigate } from "@builder.io/qwik-city";
 import Forms from "../components/forms/forms";
 import Preview from "../components/preview/preview";
+import { generateSlug, isUrl } from "../utils/utils";
 
 interface question {
   type?: string;
@@ -57,11 +59,15 @@ export const questions: question[] = [
     placeholder: "awesome_link",
     label: "Short Link",
     promp:
-      'Create your own short link. You may use _ or -.\nE.g "awesome_link" would be https://cuty.ink/awesome_link.',
+      'Create your own short link. You may use _ or -.\nE.g "awesome_link" would be https://cuty.ink/awesome_link.\nsIf blank, we\'ll generate it randomly.',
   },
   {
-    promp: 'This is how your link is going to look like.\nIt may differ a little bit depends on the user browser/night-mode/font size.'
-  }
+    promp:
+      "This is how your link is going to look like.\nIt may differ a little bit depends on the user browser/night-mode/font size.",
+  },
+  {
+    promp: "Generating link...",
+  },
 ];
 
 export const globalData = createContext("global-data");
@@ -71,11 +77,13 @@ export default component$(() => {
     currentPage: 0,
     data: {},
     currentQuestion: questions[0],
+    isLoading: false,
   });
   useTask$(({ track }) => {
     const currentPage = track(() => store.currentPage);
     store.currentQuestion = questions[currentPage];
   });
+  const navigate = useNavigate();
   const { promp } = store.currentQuestion;
   const renderPromp = promp.split("\n").map((row) => (
     <>
@@ -83,38 +91,120 @@ export default component$(() => {
     </>
   ));
   useContextProvider(globalData, store);
+  const nextQuestion = $(() => {
+    // @ts-ignore
+    const currentValue = store.data[questions[store.currentPage].name] || "";
+    switch (store.currentPage) {
+      case 0:
+        if (currentValue.length > 0) {
+          if (isUrl(currentValue)) {
+            store.currentPage += 1;
+          } else {
+            alert("Please enter a valid URL.");
+            return;
+          }
+        } else {
+          store.currentPage += 1;
+        }
+        break;
+      case 3:
+        if (currentValue.length > 0) {
+          if (isUrl(currentValue)) {
+            store.currentPage += 1;
+          } else {
+            alert("Please enter a valid URL.");
+            return;
+          }
+        } else {
+          store.currentPage += 1;
+        }
+        break;
+      case 4:
+        // Check shortUrl availbility
+        // @ts-ignore
+        if (!store.data.shortUrl) {
+          // @ts-ignore
+          store.data.shortUrl = generateSlug();
+        }
+        fetch(`http://localhost:8000/${store.data.shortUrl}`).then((res) => {
+          if (res.status === 404) {
+            store.currentPage += 1;
+            return;
+          } else {
+            alert("Sorry, short Url already used. Please enter different URL.");
+            return;
+          }
+        });
+      break;
+      default:
+        store.currentPage += 1;
+
+    }
+  });
   return (
     <div class="flex items-center justify-center grow shrink">
       <div class="lg:w-1/3 px-2 flex items-center justify-center flex-col">
         <h1 class="text-lg lg:text-5xl font-medium mb-10">
           {renderPromp}
-          <span class="flex justify-between">{store.currentPage > 0 && (
-            <span
-              onClick$={() => (store.currentPage -= 1)}
-              class="hover:underline text-xs lg:text-3xl text-gray-400 hover:text-gray-500 hover:cursor-pointer"
-            >
-              ← back
-            </span>
-          )}
-          {store.currentPage < 5 && (
-            <span
-              onClick$={() => (store.currentPage += 1)}
-              class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
-            >
-               forward →
-            </span>
-          )}
-          {store.currentPage === 5 && (
-            <span
-              onClick$={() => {}}
-              class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
-            >
-               generate →
-            </span>
-          )}
+          <span class="flex justify-between">
+            {store.currentPage > 0 && !store.isLoading && (
+              <span
+                onClick$={() => (store.currentPage -= 1)}
+                class="hover:underline text-xs lg:text-3xl text-gray-400 hover:text-gray-500 hover:cursor-pointer"
+              >
+                ← back
+              </span>
+            )}
+            {store.currentPage < 5 && (
+              <span
+                onClick$={() => {
+                  // input validation
+                  nextQuestion();
+                }}
+                class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
+              >
+                forward →
+              </span>
+            )}
+            {store.currentPage === 5 && !store.isLoading && (
+              <span
+                onClick$={() => {
+                  store.currentPage += 1;
+                  store.isLoading = true;
+                  // @ts-ignore
+                  grecaptcha
+                    .execute("6LdQTcIjAAAAAJ-3HzD3k7agGR0KJ8kP_-uxWpwP", {
+                      action: "submit",
+                    })
+                    .then(function (token: string) {
+                      fetch("http://localhost:8000", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json;charset=utf-8",
+                        },
+                        body: JSON.stringify({
+                          ...store.data,
+                          token,
+                        }),
+                      })
+                        .then(() => {
+                          // @ts-ignore
+                          navigate.path = `/view/${store.data.shortUrl}`;
+                        })
+                        .catch((err) => {
+                          alert(err);
+                          store.currentPage -= 1;
+                        });
+                    });
+                }}
+                class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
+              >
+                generate →
+              </span>
+            )}
           </span>
         </h1>
-        {store.currentPage < 5 && <Forms />}
+        {store.currentPage < 5 && <Forms nextQuestion={nextQuestion} />}
         {store.currentPage === 5 && <Preview />}
       </div>
     </div>
