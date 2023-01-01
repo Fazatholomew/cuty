@@ -17,30 +17,31 @@ export interface socialMedia {
   component: Component<previewData>;
 }
 
-export const dummie: previewData = {
-  redirectUrl: "https://jimmyganteng.com/test?id=123&q=test",
-  title: "This can't be better than this!",
-  description:
-    "I love playing football since I was a little. It's my life. I wish things can get better really really soon.",
-  photoUrl:
-    "https://static2.srcdn.com/wordpress/wp-content/uploads/2021/02/Rick-Astley-Never-Gonna-Give-You-Up-Remastered-Header.jpg",
-  shortUrl: "awesome_link",
-};
+// export const dummie: previewData = {
+//   redirectUrl: "https://jimmyganteng.com/test?id=123&q=test",
+//   title: "This can't be better than this!",
+//   description:
+//     "I love playing football since I was a little. It's my life. I wish things can get better really really soon.",
+//   photoUrl:
+//     "https://static2.srcdn.com/wordpress/wp-content/uploads/2021/02/Rick-Astley-Never-Gonna-Give-You-Up-Remastered-Header.jpg",
+//   shortUrl: "awesome_link",
+// };
 
 export default component$(() => {
   const store = useStore({ currentSocialMedia: 0 });
+  const globalStore: any = useContext(globalData);
   const socialMedias = [
     {
       name: "Twitter",
-      component: <Twitter previewData={dummie} />,
+      component: <Twitter previewData={globalStore.data} />,
     },
     {
       name: "LinkedIn",
-      component: <Linkedin previewData={dummie} />,
+      component: <Linkedin previewData={globalStore.data} />,
     },
     {
       name: "Facebook",
-      component: <Facebook previewData={dummie} />,
+      component: <Facebook previewData={globalStore.data} />,
     },
   ];
   return (
