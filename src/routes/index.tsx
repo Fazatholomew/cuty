@@ -24,7 +24,7 @@ export const questions: question[] = [
     placeholder: "https://github.com/fazatholomew",
     label: "Link to shorten",
     promp:
-      "Let's make your link shorter and looks better! And of course, QR Code.",
+      "Let's make your link shorter and looks better! Type your link and get going.",
   },
   {
     type: "text",
@@ -91,7 +91,7 @@ export default component$(() => {
           <span class="flex justify-between">{store.currentPage > 0 && (
             <span
               onClick$={() => (store.currentPage -= 1)}
-              class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
+              class="hover:underline text-xs lg:text-3xl text-gray-400 hover:text-gray-500 hover:cursor-pointer"
             >
               ← back
             </span>
@@ -99,7 +99,7 @@ export default component$(() => {
           {store.currentPage < 5 && (
             <span
               onClick$={() => (store.currentPage += 1)}
-              class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
+              class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
             >
                forward →
             </span>
@@ -107,7 +107,7 @@ export default component$(() => {
           {store.currentPage === 5 && (
             <span
               onClick$={() => {}}
-              class="underline text-xs lg:text-3xl text-gray-500 hover:text-gray-300 hover:cursor-pointer"
+              class="underline transition-all text-xs lg:text-3xl text-gray-200 hover:text-gray-400 hover:cursor-pointer"
             >
                generate →
             </span>
