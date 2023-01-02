@@ -23,14 +23,13 @@ export default component$(({nextQuestion}: {nextQuestion: QRL<() => void>}) => {
         onKeyPress$={(e) => {
           if (e.key !== "Enter") return;
           // @ts-ignore
-          globalStore.data[name] = store.currentValue;
-          // @ts-ignore
           store.currentValue = "";
           nextQuestion();
         }}
-        value={globalStore.data[name]}
+        value={store.currentValue}
         onInput$={(e) => {
           globalStore.data[name] = (e.target as HTMLInputElement).value;
+          store.currentValue = (e.target as HTMLInputElement).value; 
         }}
       />
       <label class="absolute translate-y-6 scale-75 transform text-sm lg:text-2xl text-gray-300 duration-300 peer-placeholder-shown:translate-y-0 peer-focus:text-yellow-300 peer-focus:dark:text-yellow-200">

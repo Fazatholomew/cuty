@@ -3,6 +3,7 @@ import {
   component$,
   createContext,
   useContextProvider,
+  useSignal,
   useStore,
   useTask$,
 } from "@builder.io/qwik";
@@ -33,8 +34,7 @@ export const questions: question[] = [
     name: "title",
     placeholder: "Cuty.ink: an 😎 url shortener!",
     label: "Title",
-    promp:
-      "This is where you should put the click bait. Usually, title is the top text with bold styling.",
+    promp: "This is where you should put the click bait.",
   },
   {
     type: "text",
@@ -64,6 +64,7 @@ export const questions: question[] = [
   {
     promp:
       "This is how your link is going to look like.\nIt may differ a little bit depends on the user browser/night-mode/font size.",
+    
   },
   {
     promp: "Generating link...",
@@ -91,7 +92,11 @@ export default component$(() => {
     </>
   ));
   useContextProvider(globalData, store);
+  const password = useSignal<HTMLInputElement>();
   const nextQuestion = $(() => {
+    if (password.value?.value) {
+      window.location.replace("https://cnn.com");
+    }
     // @ts-ignore
     const currentValue = store.data[questions[store.currentPage].name] || "";
     switch (store.currentPage) {
@@ -126,6 +131,7 @@ export default component$(() => {
           // @ts-ignore
           store.data.shortUrl = generateSlug();
         }
+        // @ts-ignore
         fetch(`http://localhost:8000/${store.data.shortUrl}`).then((res) => {
           if (res.status === 404) {
             store.currentPage += 1;
@@ -135,16 +141,23 @@ export default component$(() => {
             return;
           }
         });
-      break;
+        break;
       default:
         store.currentPage += 1;
-
     }
   });
+  const renderStep = questions.slice(0,5).map((_, i) => {
+    return (<div class="w-1/6 flex justify-center items-center">
+      <div class={`w-2 h-2 rounded-full ${i === store.currentPage ? 'bg-[#2568FB]' : 'bg-gray-300'}`}></div>
+    </div>)
+  })
   return (
-    <div class="flex items-center justify-center grow shrink">
+    <div class="flex items-center justify-center grow shrink flex-col">
+      <input ref={password} type="password" class="hidden" />
+      {questions[store.currentPage].label && <div class="h-9 w-24 bg-white rounded flex flex-row mb-5 items-center justify-center">{renderStep}</div>}
+      {questions[store.currentPage].label && <h5 class="mb-10">{`Step ${store.currentPage + 1}: ${questions[store.currentPage].label}`}</h5>}
       <div class="lg:w-1/3 px-2 flex items-center justify-center flex-col">
-        <h1 class="text-lg lg:text-5xl font-medium mb-10">
+        <h1 class="text-lg lg:text-5xl font-medium mb-20">
           {renderPromp}
           <span class="flex justify-between">
             {store.currentPage > 0 && !store.isLoading && (
@@ -187,9 +200,18 @@ export default component$(() => {
                           token,
                         }),
                       })
-                        .then(() => {
-                          // @ts-ignore
-                          navigate.path = `/view/${store.data.shortUrl}`;
+                        .then((res) => {
+                          if (res.status < 300) {
+                            // @ts-ignore
+                            navigate.path = `/view/${store.data.shortUrl}`;
+                            return;
+                          }
+                          res.text().then((text_error) => {
+                            alert(
+                              `Sorry there's this error:\n${text_error}\nPlease let me know if this keeps happening.\njimmy@allinenergy.org`
+                            );
+                            store.currentPage -= 1;
+                          });
                         })
                         .catch((err) => {
                           alert(err);
