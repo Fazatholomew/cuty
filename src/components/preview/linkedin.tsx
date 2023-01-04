@@ -3,9 +3,9 @@ import { previewData } from "./preview";
 
 export default component$(({ previewData }: { previewData: previewData }) => {
   const { redirectUrl, title, photoUrl } = previewData;
-  const shortenRedirectUrl = redirectUrl?.split("/")
-    ? redirectUrl.split("/")[2]
-    : redirectUrl;
+  // const shortenRedirectUrl = redirectUrl?.split("/")
+  //   ? redirectUrl.split("/")[2]
+  //   : redirectUrl;
   return (
     <div class="w-full flex flex-col items-stretch basis-auto shrink-0 bg-[#eff3f7]">
       <div class="rounded-b-none">
