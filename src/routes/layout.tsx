@@ -10,7 +10,7 @@ export default component$(() => {
           </div>
           <Slot />
           <div class="w-full h-full flex items-center justify-center">
-            <footer>Copyright © 2022 <a class="hover:text-xl transition-all" target="_blank" href="https://github.com/fazatholomew">Jimmy Hikmatullah</a>.</footer>
+            <footer>Copyright © 2022 <a class="hover:text-xl underline transition-all" target="_blank" href="https://github.com/fazatholomew">Jimmy Hikmatullah</a>.</footer>
           </div>
         </section>
       </main>

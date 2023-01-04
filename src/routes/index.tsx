@@ -132,7 +132,7 @@ export default component$(() => {
           store.data.shortUrl = generateSlug();
         }
         // @ts-ignore
-        fetch(`http://localhost:8000/${store.data.shortUrl}`).then((res) => {
+        fetch(`https://cuty.ink/${store.data.shortUrl}`).then((res) => {
           if (res.status === 404) {
             store.currentPage += 1;
             return;
@@ -146,16 +146,16 @@ export default component$(() => {
         store.currentPage += 1;
     }
   });
-  const renderStep = questions.slice(0,5).map((_, i) => {
-    return (<div class="w-1/6 flex justify-center items-center">
-      <div class={`w-2 h-2 rounded-full ${i === store.currentPage ? 'bg-[#2568FB]' : 'bg-gray-300'}`}></div>
-    </div>)
-  })
+  // const renderStep = questions.slice(0,5).map((_, i) => {
+  //   return (<div class="w-1/6 flex justify-center items-center">
+  //     <div class={`w-2 h-2 rounded-full ${i === store.currentPage ? 'bg-[#2568FB]' : 'bg-gray-300'}`}></div>
+  //   </div>)
+  // })
   return (
     <div class="flex items-center justify-center grow shrink flex-col">
       <input ref={password} type="password" class="hidden" />
-      {questions[store.currentPage].label && <div class="h-9 w-24 bg-white rounded flex flex-row mb-5 items-center justify-center">{renderStep}</div>}
-      {questions[store.currentPage].label && <h5 class="mb-10">{`Step ${store.currentPage + 1}: ${questions[store.currentPage].label}`}</h5>}
+      {/* {questions[store.currentPage].label && <div class="h-9 w-24 bg-white rounded flex flex-row mb-5 items-center justify-center">{renderStep}</div>}
+      {questions[store.currentPage].label && <h5 class="mb-10">{`Step ${store.currentPage + 1}: ${questions[store.currentPage].label}`}</h5>} */}
       <div class="lg:w-1/3 px-2 flex items-center justify-center flex-col">
         <h1 class="text-lg lg:text-5xl font-medium mb-20">
           {renderPromp}
@@ -186,11 +186,11 @@ export default component$(() => {
                   store.isLoading = true;
                   // @ts-ignore
                   grecaptcha
-                    .execute("6LdQTcIjAAAAAJ-3HzD3k7agGR0KJ8kP_-uxWpwP", {
+                    .execute("6LejW8YjAAAAAOYwG-7P47fLejI_e9YQ2m857tOe", {
                       action: "submit",
                     })
                     .then(function (token: string) {
-                      fetch("http://localhost:8000", {
+                      fetch("https://cuty.ink", {
                         method: "POST",
                         headers: {
                           "Content-Type": "application/json;charset=utf-8",

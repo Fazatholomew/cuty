@@ -26,7 +26,7 @@ export default component$(({ previewData }: { previewData: previewData }) => {
         </div>
         <div class="grow flex gap-4 shrink gap-0.5 mt-3">
           <div class="min-w-0 max-w-full text-ellipsis break-words text-base font-normal lowercase text-[#00000099]">
-            <span>{shortenRedirectUrl}</span>
+            <span>cuty.ink</span>
           </div>
         </div>
       </div>
