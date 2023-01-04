@@ -140,6 +140,9 @@ export default component$(() => {
             alert("Sorry, short Url already used. Please enter different URL.");
             return;
           }
+        }).catch((err) => {
+          alert(err);
+          return;
         });
         break;
       default:
@@ -190,7 +193,7 @@ export default component$(() => {
                       action: "submit",
                     })
                     .then(function (token: string) {
-                      fetch("https://cuty.ink", {
+                      fetch("https://cuty.ink/", {
                         method: "POST",
                         headers: {
                           "Content-Type": "application/json;charset=utf-8",
@@ -211,11 +214,13 @@ export default component$(() => {
                               `Sorry there's this error:\n${text_error}\nPlease let me know if this keeps happening.\njimmy@allinenergy.org`
                             );
                             store.currentPage -= 1;
+                            store.isLoading = false;
                           });
                         })
                         .catch((err) => {
                           alert(err);
                           store.currentPage -= 1;
+                          store.isLoading = false;
                         });
                     });
                 }}
